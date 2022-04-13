@@ -16,7 +16,7 @@ Route::post('/subcategory/{subcategory}', [AdController::class, 'insert'])->wher
 use App\Http\Controllers\UserController;
 Route::group(['middleware' => 'guest'], function (){
     Route::match(['get', 'post'], '/register', [UserController::class, 'registerForm']);
-    Route::match(['get', 'post'], '/login', [UserController::class, 'loginForm']);
+    Route::match(['get', 'post'], '/login', [UserController::class, 'loginForm'])->name('login');
 });
 Route::get('/logout', [UserController::class, 'logout'])->middleware('auth');
 

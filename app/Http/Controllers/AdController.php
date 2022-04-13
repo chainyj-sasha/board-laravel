@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ad;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdController extends Controller
 {
@@ -26,13 +27,21 @@ class AdController extends Controller
 
     public function insert(Request $request, $subcategory)
     {
-        $id = SubCategory::where('title', $subcategory)->select('id')->first();
+        if (Auth::check()){
+            $this->validate($request, [
+                'text' => 'required|',
+            ]);
 
-        $ad = new Ad();
-        $ad->text = $request->text;
-        $ad->subcategory_id = $id->id;
-        $ad->save();
+            $id = SubCategory::where('title', $subcategory)->select('id')->first();
 
-        return redirect('/subcategory/' . $subcategory);
+            $ad = new Ad();
+            $ad->text = $request->text;
+            $ad->subcategory_id = $id->id;
+            $ad->user_id = auth()->user()->id;
+            $ad->save();
+
+            return redirect('/subcategory/' . $subcategory);
+        }
+        return redirect()->route('login');
     }
 }
